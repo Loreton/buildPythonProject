@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buildPythonProject"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 readme = "README.md"
 requires-python = ">=3.14"

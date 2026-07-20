@@ -47,10 +47,10 @@ class ProjectBuilder:
 
         if not args.test:
             self.bundle_name      = f"{self.project_name}_bundle"
-            self.install_dir      = self.target_root_dir / self.project_name / "_bundle"
+            self.install_dir      = self.target_root_dir / f"{self.project_name}_bundle"
         else:
             self.bundle_name      = f"{self.project_name}_test_bundle"
-            self.install_dir      = self.target_root_dir / self.project_name / "_test_bundle"
+            self.install_dir      = self.target_root_dir / f"{self.project_name}_test_bundle"
 
         self.max_history      = 10
         self.target_root_dir.mkdir(parents=True, exist_ok=True)
@@ -423,6 +423,8 @@ class ProjectBuilder:
                 os.chdir(self.target_root_dir)
                 subprocess.run(["tar", "-xf", bundle_path ])
                 os.chdir(prev_cwd)
+                print(f"   • Installed {bundle_path} to {self.install_dir}")
+                print(f"command to test: python {self.install_dir}/run.sh")
 
         else:
             print("\n❌ Enter a vaild option!")
