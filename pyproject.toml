@@ -1,0 +1,41 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "buildPythonProject"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pylnlib",
+    "pyyaml>=6.0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+buildPythonProject = "buildpythonproject.main:main"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+
+[tool.uv.sources.pylnlib]
+path = "../pyLnLib"
+
+[tool.pyright]
+reportUnusedParameter = false
+reportAny = false
+typeCheckingMode = "basic"
+
+[tool.ruff]
+line-length = 100
