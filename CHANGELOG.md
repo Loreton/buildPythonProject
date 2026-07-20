@@ -1,3 +1,9 @@
+## v0.1.1 - 2026-07-20
+
+### Fixes
+- convertito in standard python project - (Release 0.1.0) (pylnlib_commit=3c4ccaa)
+- Initial commit
+
 ## [0.1.0] - 2026-07-20
 
 ## Other

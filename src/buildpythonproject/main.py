@@ -16,6 +16,8 @@ import tempfile
 from pathlib import Path
 from datetime import datetime
 
+from pyLnLib import PyProjectManager
+
 def playBeep():
     try:
         soundFile="/usr/share/sounds/freedesktop/stereo/bell.oga"
@@ -32,16 +34,16 @@ class ProjectBuilder:
     def __init__(self, args):
         self.args = args
         # self.project_root = Path(__file__).parent.absolute()
-        self.project_root     = Path.cwd()
+        self.project_root     = Path.cwd() # directory del progetto da lavorare
         self.project_name     = self.project_root.name
         self.target_root_dir  = Path("/home/loreto/filu/Applications/lnAppls") / self.project_name
         self.venv_dir         = self.project_root / ".venv"
 
         self.pyLnLib_path     = self.project_root.parent / "pyLnLib/src/pyLnLib"
         self.conf_path        = self.project_root / "conf"
-        self.version          = self.get_version()
         self.dist_dir         = self.target_root_dir / ".dist"
         self.history_dir      = self.target_root_dir / ".history" if args.history else None
+
 
         if not args.test:
             self.bundle_name      = f"{self.project_name}_bundle"
@@ -50,10 +52,11 @@ class ProjectBuilder:
             self.bundle_name      = f"{self.project_name}_test_bundle"
             self.install_dir      = self.target_root_dir / self.project_name / "_test_bundle"
 
-
         self.max_history      = 10
-
         self.target_root_dir.mkdir(parents=True, exist_ok=True)
+        self.pyproject_manager = PyProjectManager(self.project_root)
+        self.version          = self.pyproject_manager.get_version()
+
 
         if self.checkPythonProjectDir():
             print("=" * 40)
@@ -124,20 +127,6 @@ class ProjectBuilder:
         print(f"✅ Saved previous build as: {latest}")
         return latest
 
-
-
-    def get_version(self) -> str:
-        """Recupera la versione da library.json"""
-        library_json = self.project_root / "library.json"
-        if library_json.exists():
-            try:
-                with open(library_json) as f:
-                    data = json.load(f)
-                    if "version" in data:
-                        return data["version"]
-            except:
-                pass
-        return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
 

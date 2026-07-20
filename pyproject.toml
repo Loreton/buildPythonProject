@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buildPythonProject"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 readme = "README.md"
 requires-python = ">=3.14"
@@ -31,6 +31,7 @@ where = [
 
 [tool.uv.sources.pylnlib]
 path = "../pyLnLib"
+editable = true
 
 [tool.pyright]
 reportUnusedParameter = false
