@@ -4,12 +4,11 @@ requires-python = ">=3.14"
 
 [[package]]
 name = "buildpythonproject"
-version = "0.1.3"
+version = "0.1.4"
 source = { editable = "." }
 dependencies = [
     { name = "pylnlib" },
     { name = "pyyaml" },
-    { name = "tomli-w" },
 ]
 
 [package.optional-dependencies]
@@ -24,7 +23,6 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "ruff", marker = "extra == 'dev'" },
-    { name = "tomli-w", specifier = ">=1.2.0" },
 ]
 provides-extras = ["dev"]
 
@@ -75,7 +73,7 @@ wheels = [
 
 [[package]]
 name = "pylnlib"
-version = "0.1.22"
+version = "0.1.23"
 source = { editable = "../pyLnLib" }
 dependencies = [
     { name = "pyyaml" },
