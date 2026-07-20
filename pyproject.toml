@@ -6,13 +6,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buildPythonProject"
-version = "0.1.2"
+version = "0.1.4"
 description = ""
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "pylnlib",
     "pyyaml>=6.0.3",
+    "tomli-w>=1.2.0",
 ]
 
 [project.optional-dependencies]
