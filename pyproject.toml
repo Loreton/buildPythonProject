@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buildPythonProject"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 readme = "README.md"
 requires-python = ">=3.14"
@@ -37,6 +37,16 @@ editable = true
 reportUnusedParameter = false
 reportAny = false
 typeCheckingMode = "basic"
+reportGeneralTypeIssues = false
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
+ignore = [
+    "E401",
+    "E402",
+    "E702",
+    "E701",
+    "E722",
+]

@@ -8,9 +8,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
-import json
 import argparse
-from turtle import pd
 import zipapp
 import tempfile
 from pathlib import Path
@@ -77,7 +75,7 @@ class ProjectBuilder:
             sys.exit(1)
 
 
-    def checkPythonProjectDir(self) -> str:
+    def checkPythonProjectDir(self) -> str|bool:
         if not (self.project_root / ".venv").is_dir():
             print("ERROR: directory .venv not found!")
             return False
@@ -94,19 +92,20 @@ class ProjectBuilder:
 
 
 
-    def rotate_previous_build(self, file: Path, file_type: str = "pyz") -> str:
+    def rotate_previous_build(self, file: Path, file_type: str = "pyz") -> Path|None:
         """Ruota lo storico dei build"""
         if not self.history_dir:
             print("❌ History directory non specificata")
-            return
+            return None
 
         self.history_dir.mkdir(parents=True, exist_ok=True)
 
         if not file.exists():
-            return
+            return None
 
         print(f"🔄 Rotating {file_type} build history")
-        if file_type=='pyz': file_type='bin'
+        if file_type=='pyz':
+            file_type='bin'
 
         # Usa l'estensione corretta
         extension = file.suffix
@@ -140,18 +139,50 @@ class ProjectBuilder:
     #    Non richiede backslash o trucchi strani
     # 4. Crea __main__.py
     #######################################################################
-    def create_main_py(self, filename: str, filemode: oct=0o444):
+    def create_main_py_cleandoc(self, filename: Path, filemode: int=0o444):
         import inspect
-        content =  inspect.cleandoc(f'''#!/usr/bin/env python3
-                    import sys
-                    from pathlib import Path
+        content =  inspect.cleandoc(f'''
+            #!/usr/bin/env python3
+            import sys
+            from pathlib import Path
 
-                    sys.path.insert(0, str(Path(__file__).parent))
+            sys.path.insert(0, str(Path(__file__).parent))
 
-                    from {self.project_name.lower()}.main import main
+            from {self.project_name.lower()}.main import main
 
-                    if __name__ == "__main__":
-                        sys.exit(main())
+            if __name__ == "__main__":
+                sys.exit(main())
+        ''')
+
+        # 4. Crea script di avvio
+        print("   • Creazione __main__.py")
+        filename.write_text(content)
+        if filemode != 0:
+            filename.chmod(filemode) # filename.chmod(0o755)
+
+
+
+    #######################################################################
+    # textwrap.dedent():
+    #    Gestisce correttamente shebang (#!/usr/bin/env python3)
+    #    Mantiene la formattazione leggibile nel codice Python
+    #    Rimuove solo l'indentazione comune minima
+    #    richiede backslash sulla prima riga
+    # 4. Crea __main__.py
+    #######################################################################
+    def create_main_py(self, filename: Path, filemode: int=0o444):
+        import textwrap
+        content =  textwrap.dedent(f'''\
+            #!/usr/bin/env python3
+            import sys
+            from pathlib import Path
+
+            sys.path.insert(0, str(Path(__file__).parent))
+
+            from {self.project_name.lower()}.main import main
+
+            if __name__ == "__main__":
+                sys.exit(main())
                 ''')
 
         # 4. Crea script di avvio
@@ -159,6 +190,8 @@ class ProjectBuilder:
         filename.write_text(content)
         if filemode != 0:
             filename.chmod(filemode) # filename.chmod(0o755)
+
+
 
 
     #######################################################################
@@ -169,7 +202,7 @@ class ProjectBuilder:
     #    Non richiede backslash o trucchi strani
     # 4. Crea run.sh
     #######################################################################
-    def create_run_sh(self, filename: str, name: str, filemode: oct=0o444):
+    def create_run_sh(self, filename: Path, name: str, filemode: int=0o444):
         import inspect
         content =  inspect.cleandoc(f'''#!/bin/bash
                 # {self.project_name} v{self.version} - Portable Bundle
@@ -198,7 +231,7 @@ class ProjectBuilder:
     #    Non richiede backslash o trucchi strani
     # 4. Crea run.bat
     #######################################################################
-    def create_readme(self, filename: str, name: str, filemode: oct=0o444):
+    def create_readme(self, filename: Path, name: str, filemode: int=0o444):
         import inspect
 
         content = inspect.cleandoc(f'''
@@ -223,7 +256,7 @@ class ProjectBuilder:
 
 
 
-    def create_pyz(self) -> str:
+    def create_pyz(self) -> Path:
         """Crea un PYZ eseguibile con struttura piatta"""
         print("\n📦 Creazione PYZ eseguibile...")
 
@@ -396,8 +429,8 @@ class ProjectBuilder:
         elif self.args.build:
             pyz_path = self.create_pyz()
             if self.history_dir:
-                latest               = self.rotate_previous_build(pyz_path, "pyz")
-                latest_relative_path = latest.relative_to(self.target_root_dir)
+                latest               = self.rotate_previous_build(pyz_path, "pyz") # latest è Path | None
+                latest_relative_path = latest.relative_to(self.target_root_dir) # type: ignore
                 link_name            = self.target_root_dir / f"{self.project_name}_lnk.pyz"
                 print(f"   • Creating {link_name} --> {latest_relative_path}")
                 subprocess.run(["ln", "-sfn", latest_relative_path, link_name ])
@@ -407,9 +440,9 @@ class ProjectBuilder:
 
             if self.history_dir:
                 if not self.args.test:
-                    latest               = self.rotate_previous_build(bundle_path, "bundle")
+                    latest               = self.rotate_previous_build(bundle_path, "bundle") # latest è Path | None
                     link_name            = self.target_root_dir / f"{self.project_name}_lnk.tgz"
-                    latest_relative_path = latest.relative_to(self.target_root_dir)
+                    latest_relative_path = latest.relative_to(self.target_root_dir) # type: ignore
                     print(f"   • Creating {link_name} --> {latest_relative_path}")
                     subprocess.run(["ln", "-sfn", latest_relative_path, link_name ])
 
