@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "buildPythonProject"
-version = "0.1.5"
+version = "0.1.6"
 description = ""
 readme = "README.md"
 requires-python = ">=3.14"
@@ -22,7 +22,7 @@ dev = [
 ]
 
 [project.scripts]
-buildPythonProject = "buildpythonproject.main:main"
+build_python_project = "buildpythonproject.main:main"
 
 [tool.setuptools.packages.find]
 where = [

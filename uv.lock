@@ -4,7 +4,7 @@ requires-python = ">=3.14"
 
 [[package]]
 name = "buildpythonproject"
-version = "0.1.4"
+version = "0.1.5"
 source = { editable = "." }
 dependencies = [
     { name = "pylnlib" },
@@ -73,7 +73,7 @@ wheels = [
 
 [[package]]
 name = "pylnlib"
-version = "0.1.23"
+version = "0.1.27"
 source = { editable = "../pyLnLib" }
 dependencies = [
     { name = "pyyaml" },
