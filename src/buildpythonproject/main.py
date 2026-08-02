@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#
+# ruff: noqa I001 - Import block is un-sorted or un-formatted help: Organize imports (Ruff I001)
 """
 build.py - Script per costruire bundle e PYZ di lnSync
 """
@@ -17,7 +19,7 @@ from typing import Any
 
 from pyLnLib import PyProjectManager, keyboardPrompt
 from pyLnLib.logger import get_logger
-
+logger = get_logger()
 
 def playBeep():
     try:
@@ -34,7 +36,7 @@ def playBeep():
 class ProjectBuilder:
     def __init__(self, args):
         self.args = args
-        self.logger = get_logger()
+        self.logger = logger
         # self.project_root = Path(__file__).parent.absolute()
         self.project_root     = Path.cwd() # directory del progetto da lavorare
         self.project_name     = self.project_root.name
@@ -79,6 +81,8 @@ class ProjectBuilder:
             self.logger.info("=" * 40)
         else:
             sys.exit(1)
+
+
 
 
     def checkPythonProjectDir(self) -> bool:
