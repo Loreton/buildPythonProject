@@ -391,7 +391,7 @@ class ProjectBuilder:
             # 6. Crea il tarball (questa parte mancava!)
             self.logger.info("• Creando archive tar.gz...")
             # bundle_name = f"{self.project_name}_{self.version}_bundle.tgz"
-            bundle_name = f"{self.bundle_name}_{self.version}.tgz"
+            bundle_name = f"{self.bundle_name}_v{self.version}.tgz"
             bundle_path = self.dist_dir / bundle_name
 
             with tarfile.open(bundle_path, "w:gz") as tar:
@@ -455,7 +455,7 @@ class ProjectBuilder:
             if self.history_dir:
                 latest               = self.rotate_previous_build(pyz_path, "pyz") # latest è Path | None
                 latest_relative_path = latest.relative_to(self.target_root_dir) # type: ignore
-                link_name            = self.target_root_dir / f"{self.project_name}_lnk.pyz"
+                link_name            = self.target_root_dir / f"{self.project_name}_v{self.version}_lnk.pyz"
                 self.logger.info("• Creating link:\nsrc: %s\nlnk: %s", link_name, latest_relative_path)
                 subprocess.run(["ln", "-sfn", latest_relative_path, link_name ])
 
@@ -465,7 +465,7 @@ class ProjectBuilder:
             if self.history_dir:
                 if not self.args.test:
                     latest               = self.rotate_previous_build(bundle_path, "bundle") # latest è Path | None
-                    link_name            = self.target_root_dir / f"{self.project_name}_lnk.tgz"
+                    link_name            = self.target_root_dir / f"{self.project_name}_v{self.version}_lnk.tgz"
                     latest_relative_path = latest.relative_to(self.target_root_dir) # type: ignore
                     self.logger.info("• Creating link:\nsrc: %s\nlnk: %s", link_name, latest_relative_path)
                     subprocess.run(["ln", "-sfn", latest_relative_path, link_name ])
