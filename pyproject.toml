@@ -11,6 +11,7 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "cryptography>=50.0.1",
     "pylnlib",
     "pyyaml>=6.0.3",
 ]
